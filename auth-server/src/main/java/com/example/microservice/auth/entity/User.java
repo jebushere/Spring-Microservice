@@ -5,7 +5,10 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -15,14 +18,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
+@Setter@Getter
 public class User implements UserDetails {
 	
 	private static final long serialVersionUID = -5108207691305250365L;
 
 	@Id
-	private String id;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 
 	@Column(unique = true)
 	private String username;
@@ -35,7 +38,8 @@ public class User implements UserDetails {
 
 	private String resetPasswordKey;
 
-	private Set<Authorities> authorities = new HashSet<>();
+	@OneToMany(mappedBy = "user_id", targetEntity = UserAuthority.class)
+	private Set<UserAuthority> authorities = new HashSet<>();
 
 	@Override
 	public boolean isAccountNonExpired() {
